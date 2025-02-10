@@ -1,9 +1,9 @@
-const express = require("express");
-const auth = require("./auth");
+import express from 'express';
+import authRoutes from './authRoutes';
 
 const router = express.Router();
 
 // Mount all feature routes
-router.use("/qr", auth);
+router.use("/auth", authRoutes);
 
-module.exports = router;
+export default router;
