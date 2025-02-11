@@ -10,14 +10,14 @@ router.post('/signin', login);
 router.get('/me', authenticateToken, (req, res) => {
   res.json({
     message: 'You have accessed a protected route',
-    user: req.user
+    user: req
   });
 });
 
 router.get('/dashboard', authenticateToken, (req, res) => {
   res.json({
     message: 'Welcome to your dashboard',
-    userId: req.user?.id
+    userId: req
   });
 });
 
