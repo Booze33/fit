@@ -31,7 +31,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(routes)/auth/sign_in" />
+        <Stack.Screen name="(routes)/auth/sign_up" />
         <Stack.Screen name="(routes)/notification/index" />
       </Stack>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
