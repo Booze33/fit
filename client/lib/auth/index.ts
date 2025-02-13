@@ -31,5 +31,7 @@ export const SignUp = async (name: string, email: string, password: string) => {
     throw new Error(errorData?.message || "Failed to sign up")
   }
 
+  console.log(response.body)
+
   return response.json();
 }
