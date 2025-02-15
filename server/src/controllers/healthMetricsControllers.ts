@@ -218,7 +218,7 @@ export const deleteHealthMetrics = async (req: AuthRequest, res: Response) => {
   }
 }
 
-export const createEndpoint = async (req: AuthRequest, Response) => {
+export const createEndpoint = async (req: AuthRequest, res: Response) => {
   try {
     const { dataPoints } = req.body;
 
@@ -226,7 +226,7 @@ export const createEndpoint = async (req: AuthRequest, Response) => {
       return res.status(400).json({ error: 'dataPoints must be an array' });
     }
 
-    const tranformedMetrics = dataPoints.map(point => ({
+    const transformedMetrics = dataPoints.map(point => ({
       userId: req.user!.id,
       type: mapGoogleFitTypeToInternal(point.dataType),
       value: point.value,
@@ -235,7 +235,7 @@ export const createEndpoint = async (req: AuthRequest, Response) => {
     }));
 
     const syncResults = await Promise.all(
-      transformedMetrics.map(metric =>
+      transformedMetrics.map(metric => 
         prisma.healthMetric.upsert({
           where: {
             userId_type_timestamp: {
@@ -261,12 +261,14 @@ export const createEndpoint = async (req: AuthRequest, Response) => {
   }
 }
 
-const mapGoogleFitTypeToInternal = (googleFitType: string) => {
+const mapGoogleFitTypeToInternal = (externalType: string) => {
   const typeMap: Record<string, string> = {
     'com.google.step_count.delta': 'steps',
     'com.google.heart_rate.bpm': 'heart_rate',
     'com.google.calories.expended': 'calories',
-    'com.google.heart_rate.bpm': 'heart_rate',
-    'com.google.distance.delta'
+    'com.google.distance.delta': 'distance',
+    'com.google.weight': 'weight'
   }
+
+  return typeMap[externalType] || externalType;
 }

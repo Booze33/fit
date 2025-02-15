@@ -53,5 +53,6 @@ model HealthMetric {
   source    String   // e.g., "google_fit", "apple_health"
   user      User     @relation(fields: [userId], references: [id])
 
+  @@unique([userId, type, timestamp], name: "userId_type_timestamp")
   @@index([userId, type, timestamp])
 }
