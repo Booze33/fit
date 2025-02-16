@@ -1,29 +1,51 @@
 'use client';
 
-import { View } from 'react-native';
-import { Input, Icon, Button } from '@rneui/themed';
-import { useState } from 'react';
-import { SignUp } from '@/lib/auth/index';
+import { View, TextInput, Button, ActivityIndicator } from 'react-native';
+import { useState, useEffect } from 'react';
+import { SignUp, GetLoggedInUser } from '@/lib/auth/index';
 import { Alert } from 'react-native';
+import { router } from 'expo-router';
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const user = await GetLoggedInUser();
+        if (user) {
+          router.replace('/');
+        }
+      } catch (error) {
+        console.error('Error checking authentication status:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   const handleSubmit = async () => {
+    if (!email || !name || !password) {
+      Alert.alert('Error', 'Please fill in all fields to sign up');
+      return;
+    }
+
     try {
       setLoading(true);
       
-      if (!email || !name || !password) {
-        throw new Error('Please fill in all fields to sign up');
-      }
-      
       const result = await SignUp(name, email, password);
-      
-      Alert.alert('Success', 'Your account has been created successfully');
-      
+
+      if (result) {
+        router.push('/');
+        Alert.alert('Success', 'Your account has been created successfully');
+      }
+
       setName('');
       setEmail('');
       setPassword('');
@@ -35,41 +57,44 @@ const SignUpScreen = () => {
     }
   };
 
-  const handleTest = () => {
-    console.log('hot water');
-  }
+  if (loading) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
 
   return (
     <View>
-      <Input
+      <TextInput
         placeholder="Enter your full name"
         value={name}
         onChangeText={setName}
-        leftIcon={<Icon name="person" type="material" size={24} />}
       />
       
-      <Input
+      <TextInput
         placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-        leftIcon={<Icon name="email" type="material" size={24} />}
       />
       
-      <Input
+      <TextInput
         placeholder="Enter your password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry={true}
-        leftIcon={<Icon name="lock" type="material" size={24} />}
       />
       
       <Button
         title="Sign Up"
         onPress={handleSubmit}
-        loading={loading}
+        disabled={loading}
       />
+
+      {isSubmitting && <ActivityIndicator size="small" />}
     </View>
   );
 };
