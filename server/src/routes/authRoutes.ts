@@ -1,18 +1,12 @@
 import express from 'express';
-import { register, login } from '../controllers/authControllers';
+import { register, login, getCurrentUser } from '../controllers/authControllers';
 import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/signin', login);
-
-router.get('/me', authenticateToken, (req, res) => {
-  res.json({
-    message: 'You have accessed a protected route',
-    user: req
-  });
-});
+router.get('/me', authenticateToken, getCurrentUser)
 
 router.get('/dashboard', authenticateToken, (req, res) => {
   res.json({
