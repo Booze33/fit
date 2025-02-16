@@ -1,5 +1,5 @@
 import { API_URL } from "@/config";
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthResponse {
   token?: string;
@@ -30,7 +30,7 @@ export const SignIn = async (email: string, password: string): Promise<AuthRespo
 
     if (data.token) {
       try {
-        await SecureStore.setItemAsync('token', data.token);
+        await AsyncStorage.setItem('token', data.token);
         console.log('Token stored:', data.token);
       } catch (storeError) {
         console.error('Error storing token:', storeError);
@@ -67,7 +67,7 @@ export const SignUp = async (name: string, email: string, password: string): Pro
 
     if (data.token) {
       try {
-        await SecureStore.setItemAsync('token', data.token);
+        await AsyncStorage.setItem('token', data.token);
         console.log('Token stored:', data.token);
       } catch (storeError) {
         console.error('Error storing token:', storeError);
@@ -87,7 +87,7 @@ export const SignUp = async (name: string, email: string, password: string): Pro
 
 export const signOut = async (): Promise<void> => {
   try {
-    await SecureStore.deleteItemAsync('token');
+    await AsyncStorage.removeItem('token');
     console.log("User logged out successfully");
   } catch (error) {
     console.error("Logout failed:", error);
@@ -97,7 +97,7 @@ export const signOut = async (): Promise<void> => {
 
 export const GetLoggedInUser = async (): Promise<AuthResponse['user'] | null> => {
   try {
-    const token = await SecureStore.getItemAsync('token');
+    const token = await AsyncStorage.getItem('token');
 
     if (!token) {
       console.log("No authentication token found");

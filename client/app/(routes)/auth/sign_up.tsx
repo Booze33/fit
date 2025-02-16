@@ -11,7 +11,6 @@ const SignUpScreen = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -94,7 +93,7 @@ const SignUpScreen = () => {
         disabled={loading}
       />
 
-      {isSubmitting && <ActivityIndicator size="small" />}
+      {loading && <ActivityIndicator size="small" />}
     </View>
   );
 };
