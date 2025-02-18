@@ -29,7 +29,7 @@ export default function RootLayout() {
           headerTintColor: colorScheme == 'dark' ? '#fff' : '#000'
         }}
       >
-        <Stack.Screen name="index" />
+        
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(routes)/auth/sign_up" />
         <Stack.Screen name="(routes)/notification/index" />
