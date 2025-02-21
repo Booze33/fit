@@ -231,11 +231,11 @@ export const forgotPassword = async (req: Request, res: Response) => {
       }
     });
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/auth/reset-password?token=${resetToken}`;
 
     await transporter.sendMail({
       from: process.env.SMTP_USER || '"Password Reset" <noreply@gmail.com>',
-      to: {email},
+      to: email,
       subject: 'Password Reset Request',
       html: `
         <h1>Password Reset</h1>

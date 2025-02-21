@@ -1,12 +1,12 @@
 'use client';
 
-import { View, TextInput, Button, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Button, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from 'react';
 import { SignIn, GetLoggedInUser } from '@/lib/auth/index';
 import { Alert } from 'react-native';
-import { router } from 'expo-router';
+import { router, Link } from 'expo-router';
 
-const SignUpScreen = () => {
+const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -85,9 +85,26 @@ const SignUpScreen = () => {
         disabled={loading}
       />
 
+      <Link
+        href="/auth/sign_up"
+        className="text-lg text-center"
+      >
+        Don't have an account?{" "}
+        <Text className="text-primary-500">Sign Up</Text>
+      </Link>
+
+      <Link
+        href={{
+          pathname: '/auth/forgot_password'
+        }}
+        className="text-lg text-center"
+      >
+        <Text className="text-primary-500">Forgot Password</Text>
+      </Link>
+
       {loading && <ActivityIndicator size="small" />}
     </View>
   );
 };
 
-export default SignUpScreen;
+export default SignInScreen;

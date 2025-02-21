@@ -1,15 +1,13 @@
 'use client';
 
-import { View, Text, TextInput, Button, ActivityIndicator } from 'react-native';
+import { View, TextInput, Button, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from 'react';
-import { SignUp, GetLoggedInUser } from '@/lib/auth/index';
+import { ForgotPassword, GetLoggedInUser } from '@/lib/auth/index';
 import { Alert } from 'react-native';
-import { router, Link } from 'expo-router';
+import { router } from 'expo-router';
 
-const SignUpScreen = () => {
+const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const SignUpScreen = () => {
   }, []);
 
   const handleSubmit = async () => {
-    if (!email || !name || !password) {
+    if (!email) {
       Alert.alert('Error', 'Please fill in all fields to sign up');
       return;
     }
@@ -38,19 +36,19 @@ const SignUpScreen = () => {
     try {
       setLoading(true);
       
-      const result = await SignUp(name, email, password);
+      const result = await ForgotPassword(email);
+      console.log(email)
+      console.log(result)
 
       if (result) {
         router.push('/');
-        Alert.alert('Success', 'Your account has been created successfully');
+        Alert.alert('Success', 'Email sent');
       }
 
-      setName('');
       setEmail('');
-      setPassword('');
-      
+
     } catch (err) {
-      console.error('Error: failed to sign up', err);
+      console.error('Error: failed to send email', err);
     } finally {
       setLoading(false);
     }
@@ -67,12 +65,6 @@ const SignUpScreen = () => {
   return (
     <View>
       <TextInput
-        placeholder="Enter your full name"
-        value={name}
-        onChangeText={setName}
-      />
-      
-      <TextInput
         placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
@@ -80,30 +72,15 @@ const SignUpScreen = () => {
         autoCapitalize="none"
       />
       
-      <TextInput
-        placeholder="Enter your password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry={true}
-      />
-      
       <Button
-        title="Sign Up"
+        title="Enter"
         onPress={handleSubmit}
         disabled={loading}
       />
-
-      <Link
-        href="/auth/sign_in"
-        className="text-lg text-center"
-      >
-        Already have an account?
-        <Text className="text-primary-500">Sign Up</Text>
-      </Link>
 
       {loading && <ActivityIndicator size="small" />}
     </View>
   );
 };
 
-export default SignUpScreen;
+export default ForgotPasswordScreen;

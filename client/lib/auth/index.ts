@@ -11,6 +11,14 @@ interface AuthResponse {
   message?: string;
 }
 
+interface ForgotPasswordResponse {
+  message: string;
+}
+
+interface ResetPasswordResponse {
+  message: string;
+}
+
 export const SignIn = async (email: string, password: string): Promise<AuthResponse> => {
   try {
     const response = await fetch(`${API_URL}/auth/signin`, {
@@ -85,7 +93,7 @@ export const SignUp = async (name: string, email: string, password: string): Pro
   }
 }
 
-export const signOut = async (): Promise<void> => {
+export const SignOut = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem('token');
     console.log("User logged out successfully");
@@ -122,5 +130,52 @@ export const GetLoggedInUser = async (): Promise<AuthResponse['user'] | null> =>
   } catch (error) {
     console.error("Error fetching logged-in user:", error);
     return null;
+  }
+};
+
+export const ForgotPassword = async (email: string): Promise<ForgotPasswordResponse> => {
+  try {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      //console.log(response)
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || "Failed to process password reset request");
+    }
+
+    const data: ForgotPasswordResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    throw error;
+  }
+};
+
+export const ResetPassword = async (password: string, token: string): Promise<ResetPasswordResponse> => {
+  try {
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password, token }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || "Failed to process password reset request");
+    }
+
+    const data: ResetPasswordResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Reset password error:", error);
+    throw error;
   }
 };

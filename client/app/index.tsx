@@ -1,10 +1,10 @@
-import { StyleSheet, Image, Platform, Text, Button, View } from 'react-native';
-import { GetLoggedInUser } from '@/lib/auth/index';
+import { View, Text, Button } from 'react-native';
+import { GetLoggedInUser, SignOut } from '@/lib/auth/index';
 import { useEffect, useState } from 'react';
 import { router, Link } from 'expo-router';
 import './global.css';
 
-export default function index() {
+export default function Index() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,8 +25,17 @@ export default function index() {
     checkAuthStatus();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await SignOut();
+      router.push('/auth/sign_in');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
-    <View className="w-[100vw] h-[100vh] flex justify-center items-center bg-gray-400 flex-col">
+    <View className="w-full h-full flex justify-center items-center bg-gray-400 flex-col">
       <View>
         <Link
           href="/auth/sign_up"
@@ -42,6 +51,11 @@ export default function index() {
           <Text className="text-primary-500">Sign In</Text>
         </Link>
       </View>
+
+      <Button 
+        title="Log Out" 
+        onPress={handleLogout} 
+      />
     </View>
   );
 }
