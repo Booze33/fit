@@ -12,8 +12,9 @@ export default function RootLayout() {
   });
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
       <Stack >
+        <Stack.Screen name="index" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(routes)/auth/sign_in" />
         <Stack.Screen name="(routes)/notification/index" />
